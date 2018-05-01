@@ -29,7 +29,7 @@ function createDivs(qtde) {
         new_div_pag.setAttribute("class", "pagination-circle");
         div_navegation.appendChild(new_div_pag);
 
-        var name = "div-child-" + i;
+        var name = i;
         var name_formated = String.fromCharCode(39) + name + String.fromCharCode(39);
         var new_link = document.createElement("a");
         new_link.setAttribute("href", "#" + name);
@@ -43,6 +43,8 @@ function createDivs(qtde) {
     new_div_pag.setAttribute("onclick", "clickArrowRigth()");    
     div_navegation.appendChild(new_div_pag);
     
+    marcarPageAtual(1);
+    
 }
 
 function escondeAllDivs() {
@@ -50,26 +52,58 @@ function escondeAllDivs() {
     for (var i = 0; i < all.length; i++) {
         all.item(i).style.display = 'none';
     }
-//    var all = document.querySelectorAll(".div-navegation");
-//    for (var i = 0; i < all.length; i++) {
-//        all.item(i).classList.remove("pagination-botton-selected");
-//    }
 }
 
-function mostraAtualDiv(parameter) {
-    var div_atual = document.getElementById(parameter);
+function marcarPageAtual(id_atual) {
+    var all = document.querySelector("#div-navegation");
+    for (var i = 0; i < all.childElementCount; i++) {
+        all.childNodes[i].classList.remove("pagination-circle-active");
+    }
+    all.childNodes[id_atual].classList.add("pagination-circle-active");
+}
+
+function mostraAtualDiv(id_atual) {
+    var div_name = "div-child-"+id_atual;
+    var div_atual = document.getElementById(div_name);
     div_atual.style.display = '';
+    
 }
 
-function clickCircle(name) {
+function clickCircle(id_atual) {
     escondeAllDivs();
-    mostraAtualDiv(name);
+    mostraAtualDiv(id_atual);
+    marcarPageAtual(id_atual);    
 }
 
 function clickArrowLeft() {
-    alert("clickArrowLeft()");
+    id_atual = getPageAtualId() - 1;
+    if (id_atual == 0) {
+        id_atual = 1;
+    }
+    escondeAllDivs();
+    mostraAtualDiv(id_atual);
+    marcarPageAtual(id_atual);        
 }
 
 function clickArrowRigth() {
-    alert("clickArrowRigth()");
+    id_atual = getPageAtualId() + 1;
+    var all = document.querySelector("#div-navegation");
+    if (id_atual == (all.childElementCount-1)) {
+        id_atual = id_atual - 1;
+    }
+    escondeAllDivs();
+    mostraAtualDiv(id_atual);
+    marcarPageAtual(id_atual);        
+}
+
+function getPageAtualId() {
+    var all = document.querySelector("#div-navegation");
+    var id_atual;
+    for (var i = 0; i < all.childElementCount; i++) {
+        if (all.childNodes[i].classList.contains("pagination-circle-active")) {
+            id_atual = i;
+            break;
+        }
+    }
+    return id_atual;
 }
